@@ -45,6 +45,22 @@ yarn dev
 # or
 bun dev
 ```
+# Deploying on Vercel using Vercel CLI
+# Install Vercel Dependencies
+npm i -g vercel
+# or
+yarn global add vercel
+# or
+bun add -g vercel
+# Check Vercel Version
+vercel --version
+# Build Vercel Project-
+# Navigate to Project Directory
+cd /your project location
+vercel -build
+# Authentication is required to your vercel dashboard
+# Email ID used to create vercel account can be used to authenticate.
+# Watch the build magic happen! Good Luck!
 
 Visit `http://localhost:4321` in your browser to see it in action.
 
