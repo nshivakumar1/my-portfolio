@@ -1,7 +1,7 @@
 export const personalInfo = {
   name: "Nakul Shivakumar",
   location: "Bengaluru, India",
-  email: "codecloudevops@outlook.com",
+  email: "nakulshivakumar84@gmail.com",
   github: "https://github.com/nshivakumar1",
   linkedin: "https://www.linkedin.com/in/nakulshivakumar/",
 };
