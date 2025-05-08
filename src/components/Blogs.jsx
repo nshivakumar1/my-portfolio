@@ -3,7 +3,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import blogPosts from '../data/blogData';
 
-  const Blogs: React.FC = () => {
+  const Blogs = () => {
     return (
     <section id="blogs" className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">
