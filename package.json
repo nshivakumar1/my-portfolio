@@ -16,13 +16,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^4.2.1",
+    "@astrojs/react": "^4.2.7",
     "@icons-pack/react-simple-icons": "^12.7.0",
     "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "^4.0.14",
     "@types/react-dom": "^19.0.4",
     "aos": "^2.3.4",
-    "astro": "^5.5.3",
+    "astro": "^5.7.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.5.0",
