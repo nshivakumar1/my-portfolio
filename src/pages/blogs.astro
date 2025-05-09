@@ -1,5 +1,7 @@
 ---
 // blogs.astro
+console.log('Executing blogs.astro');
+
 import Layout from '../layouts/Layout.astro';
 import Parser from 'rss-parser';
 
@@ -34,11 +36,13 @@ async function getSubstackPosts(): Promise<SubstackPost[]> {
   
   // Replace with your actual Substack URL - using Medium as a fallback for testing
   // You can change this to your actual Substack URL later
-  const substackUrl = 'https://codeclouddevops.substack.com/publish/posts';
+  const substackUrl = 'https://codeclouddevops.substack.com/feed';
+  console.log('Attempting to fetch feed from:', substackUrl);
   
   try {
     // Try direct fetch first
     const feed = await parser.parseURL(substackUrl);
+    console.log('Direct fetch successful. Feed:', feed);
     return (feed.items as SubstackPost[]) || [];
   } catch (error: unknown) {
     console.error("Direct feed fetch failed, trying workaround...");
@@ -47,10 +51,12 @@ async function getSubstackPosts(): Promise<SubstackPost[]> {
       // Fallback to fetch API with manual parsing if direct method fails
       const response = await fetch(substackUrl);
       if (!response.ok) {
+        console.error(`Fallback fetch failed: ${response.status} ${response.statusText}`);
         throw new Error(`Failed to fetch: ${response.status}`);
       }
-      
+      console.log(`Fallback fetch successful. Status: ${response.status} ${response.statusText}`);
       const xmlText = await response.text();
+      console.log('Parsing XML text...');
       const feed = await parser.parseString(xmlText);
       return (feed.items as SubstackPost[]) || [];
     } catch (fallbackError: unknown) {
