@@ -78,11 +78,7 @@ export const skills = {
     "Python",
     "SQL",
   ],
-  cloudServices: [
-    "AWS",
-    "Azure",
-    "GCP",
-  ],
+  cloudAndDevOps: ["AWS"],
 toolsAndServices: [
   "Jira Service Management",
   "BMC Control-M",
