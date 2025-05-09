@@ -1,271 +1,98 @@
 ---
-function fetchSubstackPosts(): any[] | PromiseLike<any[]> {
-throw new Error('Function not implemented.');
-}
-
-// src/pages/blogs.astro
-// Use your actual layout component - adjust path as needed
+// blogs.astro
 import Layout from '../layouts/Layout.astro';
+import Parser from 'rss-parser';
 
-// Define an interface for post type
+// Define a type for the post items
 interface SubstackPost {
   title: string;
   link: string;
-  pubDate: string;
+  pubDate?: string;
   contentSnippet?: string;
-  content?: string;
-  thumbnail?: string | null;
+  // Add other properties as needed
 }
 
-// Function to format date
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
-}
-// In your blogs.astro file
-let posts = [];
-try {
-  // Your existing feed fetching code
-  posts = await fetchSubstackPosts();
-} catch (error) {
-  console.error("Failed to fetch Substack posts:", error);
-  // Provide empty array or fallback content
-}
-// Fetch Substack posts at build time
-let posts: SubstackPost[] = [];
-let error: string | null = null;
-
-try {
-  const parser = await import('rss-parser');
-  const Parser = parser.default;
-  
-  const rssParser = new Parser({
-    customFields: {
-      item: [
-        ['content:encoded', 'content'],
-        ['media:content', 'media']
-      ],
-    }
-  });
+// Create a function to fetch Substack posts with proper error handling
+async function getSubstackPosts(): Promise<SubstackPost[]> {
+  const parser = new Parser();
   
   // Replace with your actual Substack URL
-  const substackURL = 'https://codeclouddevops.substack.com/publish/posts';
-  // Fetch the RSS feed
+  // Common formats: https://yoursubstack.substack.com/feed
+  const substackUrl = 'https://substack.com/@codeclouddevops/posts';
   
   try {
-    const feed = await rssParser.parseURL(substackURL);
-    
-    posts = feed.items.map(item => {
-      // Try to extract a thumbnail from the content if available
-      let thumbnail: string | null = null;
-      
-      // Look for image in media:content field
-      if (item.media && item.media.$ && item.media.$.url) {
-        thumbnail = item.media.$.url;
-      } 
-      // Fallback: try to extract first image from content
-      else if (item.content) {
-        const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
-        if (imgMatch && imgMatch[1]) {
-          thumbnail = imgMatch[1];
-        }
-      }
-      
-      return {
-        title: item.title || "Untitled Post",
-        link: item.link || "#",
-        pubDate: item.pubDate || new Date().toISOString(),
-        contentSnippet: item.contentSnippet,
-        content: item.content?.substring(0, 500), // Limit content length
-        thumbnail,
-      };
-    });
-  } catch (err) {
-    console.error('Error parsing Substack feed:', err);
-    error = 'Failed to parse blog posts. Please try again later.';
+    const feed = await parser.parseURL(substackUrl);
+    return (feed.items as SubstackPost[]) || [];
+  } catch (error: unknown) {
+    // Properly type the error and handle it
+    if (error instanceof Error) {
+      console.error(`Error parsing Substack feed: ${error.message}`);
+    } else {
+      console.error(`Unknown error parsing Substack feed`);
+    }
+    return []; // Return empty array instead of failing
   }
-} catch (err) {
-  console.error('Error importing RSS parser:', err);
-  error = 'Failed to load blog posts. Please try again later.';
 }
+
+// Get posts with error handling - DECLARE ONLY ONCE
+const posts = await getSubstackPosts();
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>My Blog Posts | NakulFolio</title>
-  <meta name="description" content="Read my latest blog posts from Substack" />
-</head>
-<body>
-  <main class="blogs-container">
-    <h1 class="blogs-title">Blog Posts</h1>
+<Layout title="Blog Posts">
+  <main>
+    <h1>Blog Posts</h1>
     
-    {error && <p class="blogs-error">{error}</p>}
-    
-    <div class="blogs-grid">
-      {posts.map((post) => (
-        <div class="blog-card">
-          {post.thumbnail && (
-            <div class="thumbnail-container">
-              <img 
-                src={post.thumbnail} 
-                alt={post.title} 
-                class="blog-thumbnail"
-              />
-            </div>
-          )}
-          <div class="blog-content">
-            <h2 class="blog-title">
-              <a href={post.link} target="_blank" rel="noopener noreferrer">
-                {post.title}
-              </a>
-            </h2>
-            <p class="blog-date">{formatDate(post.pubDate)}</p>
-            <div class="blog-excerpt" set:html={post.contentSnippet || post.content?.substring(0, 150) + '...'} />
-            <a 
-              href={post.link} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="read-more"
-            >
-              Read More →
-            </a>
+    {posts.length > 0 ? (
+      <div class="posts-container">
+        {posts.map((post) => (
+          <div class="post-card">
+            <h2>{post.title}</h2>
+            {post.pubDate && (
+              <p class="date">
+                {new Date(post.pubDate).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'long', 
+                  day: 'numeric'
+                })}
+              </p>
+            )}
+            {post.contentSnippet && (
+              <p>{post.contentSnippet.substring(0, 150)}...</p>
+            )}
+            <a href={post.link} target="_blank" rel="noopener noreferrer">Read more</a>
           </div>
-        </div>
-      ))}
-    </div>
-    
-    {posts.length === 0 && !error && (
-      <p class="blogs-no-posts">No posts found.</p>
+        ))}
+      </div>
+    ) : (
+      <div class="no-posts">
+        <p>No blog posts available at the moment. Check back soon!</p>
+      </div>
     )}
   </main>
-</body>
+</Layout>
 
 <style>
-  .blogs-container {
-    padding: 2rem 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .blogs-title {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-
-  .blogs-error, .blogs-no-posts {
-    text-align: center;
-    padding: 2rem 0;
-    font-size: 1.2rem;
-  }
-
-  .blogs-error {
-    color: #e53e3e;
-  }
-
-  .blogs-grid {
+  .posts-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
+    margin: 2rem 0;
   }
-
-  .blog-card {
+  
+  .post-card {
+    border: 1px solid #eaeaea;
     border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fff;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .blog-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  }
-
-  .thumbnail-container {
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-  }
-
-  .blog-thumbnail {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-
-  .blog-card:hover .blog-thumbnail {
-    transform: scale(1.05);
-  }
-
-  .blog-content {
     padding: 1.5rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-
-  .blog-title {
-    font-size: 1.5rem;
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-  }
-
-  .blog-title a {
-    color: #333;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .blog-title a:hover {
-    color: #0070f3;
-  }
-
-  .blog-date {
+  
+  .date {
     color: #666;
     font-size: 0.9rem;
-    margin-bottom: 1rem;
   }
-
-  .blog-excerpt {
-    color: #444;
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-    flex-grow: 1;
-  }
-
-  .read-more {
-    display: inline-block;
-    color: #0070f3;
-    text-decoration: none;
-    font-weight: 500;
-    transition: transform 0.2s ease;
-    margin-top: auto;
-  }
-
-  .read-more:hover {
-    transform: translateX(5px);
-  }
-
-  @media (max-width: 768px) {
-    .blogs-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .blogs-title {
-      font-size: 2rem;
-    }
+  
+  .no-posts {
+    text-align: center;
+    padding: 3rem 0;
   }
 </style>
