@@ -78,6 +78,7 @@ export default function SkillsSection() {
           </motion.div>
 
           <motion.div variants={skillCategoryVariants}>
+            {/* Frontend Development Section (Removed as per instruction) */}
             <GlassCard className="p-4">
               <h3 className="text-lg font-medium mb-3 text-center md:text-left flex items-center">
                 <span className="mr-2 text-xl">🎨</span> Frontend Development
@@ -91,6 +92,7 @@ export default function SkillsSection() {
           </motion.div>
 
           <motion.div variants={skillCategoryVariants}>
+            {/* Backend Development Section (Removed as per instruction) */}
             <GlassCard className="p-4">
               <h3 className="text-lg font-medium mb-3 text-center md:text-left flex items-center">
                 <span className="mr-2 text-xl">⚙️</span> Backend Development
@@ -104,6 +106,7 @@ export default function SkillsSection() {
           </motion.div>
 
           <motion.div variants={skillCategoryVariants}>
+            {/* Database & Storage Section (Removed as per instruction) */}
             <GlassCard className="p-4">
               <h3 className="text-lg font-medium mb-3 text-center md:text-left flex items-center">
                 <span className="mr-2 text-xl">🗄️</span> Database & Storage
