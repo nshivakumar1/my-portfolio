@@ -1,4 +1,8 @@
 ---
+function fetchSubstackPosts(): any[] | PromiseLike<any[]> {
+throw new Error('Function not implemented.');
+}
+
 // src/pages/blogs.astro
 // Use your actual layout component - adjust path as needed
 import Layout from '../layouts/Layout.astro';
@@ -22,7 +26,15 @@ function formatDate(dateString: string): string {
     day: 'numeric' 
   });
 }
-
+// In your blogs.astro file
+let posts = [];
+try {
+  // Your existing feed fetching code
+  posts = await fetchSubstackPosts();
+} catch (error) {
+  console.error("Failed to fetch Substack posts:", error);
+  // Provide empty array or fallback content
+}
 // Fetch Substack posts at build time
 let posts: SubstackPost[] = [];
 let error: string | null = null;
@@ -41,7 +53,8 @@ try {
   });
   
   // Replace with your actual Substack URL
-  const substackURL = 'https://YOUR-SUBSTACK-NAME.substack.com/feed';
+  const substackURL = 'https://codeclouddevops.substack.com/publish/posts';
+  // Fetch the RSS feed
   
   try {
     const feed = await rssParser.parseURL(substackURL);
