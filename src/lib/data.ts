@@ -78,6 +78,19 @@ export const skills = {
     "Python",
     "SQL",
   ],
+  cloudServices: [
+    "AWS",
+    "Azure",
+    "GCP",
+  ],
+toolsAndServices: [
+  "Jira Service Management",
+  "BMC Control-M",
+  "BMC Helix Control-M",
+  "ServiceNow",
+  "Power Automate",
+  "Power BI",
+]
 };
 
 export const projects = [
