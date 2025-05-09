@@ -14,23 +14,65 @@ interface SubstackPost {
 
 // Create a function to fetch Substack posts with proper error handling
 async function getSubstackPosts(): Promise<SubstackPost[]> {
-  const parser = new Parser();
+  // Configure parser with more lenient options
+  const parser = new Parser({
+    customFields: {
+      item: ['content:encoded', 'description']
+    },
+    // Add timeout to prevent hanging
+    timeout: 5000,
+    // More lenient XML parsing
+    xml2js: {
+      // Make XML parsing more tolerant of errors
+      strict: false,
+      normalize: true,
+      normalizeTags: true,
+      // Skip attributes that cause issues
+      ignoreAttrs: true
+    }
+  });
   
-  // Replace with your actual Substack URL
-  // Common formats: https://yoursubstack.substack.com/feed
+  // Replace with your actual Substack URL - using Medium as a fallback for testing
+  // You can change this to your actual Substack URL later
   const substackUrl = 'https://substack.com/@codeclouddevops/posts';
   
   try {
+    // Try direct fetch first
     const feed = await parser.parseURL(substackUrl);
     return (feed.items as SubstackPost[]) || [];
   } catch (error: unknown) {
-    // Properly type the error and handle it
-    if (error instanceof Error) {
-      console.error(`Error parsing Substack feed: ${error.message}`);
-    } else {
-      console.error(`Unknown error parsing Substack feed`);
+    console.error("Direct feed fetch failed, trying workaround...");
+    
+    try {
+      // Fallback to fetch API with manual parsing if direct method fails
+      const response = await fetch(substackUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.status}`);
+      }
+      
+      const xmlText = await response.text();
+      const feed = await parser.parseString(xmlText);
+      return (feed.items as SubstackPost[]) || [];
+    } catch (fallbackError: unknown) {
+      // Log both errors for debugging
+      if (error instanceof Error) {
+        console.error(`Original error: ${error.message}`);
+      }
+      
+      if (fallbackError instanceof Error) {
+        console.error(`Fallback error: ${fallbackError.message}`);
+      }
+      
+      // Return mock data so the page doesn't break
+      return [
+        {
+          title: "Coming Soon",
+          link: "#",
+          pubDate: new Date().toISOString(),
+          contentSnippet: "Blog posts will be available soon. Check back later!"
+        }
+      ];
     }
-    return []; // Return empty array instead of failing
   }
 }
 
@@ -49,7 +91,7 @@ const posts = await getSubstackPosts();
             <h2>{post.title}</h2>
             {post.pubDate && (
               <p class="date">
-                {new Date(post.pubDate).toLocaleDateString(undefined, {
+                {new Date(post.pubDate).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long', 
                   day: 'numeric'
