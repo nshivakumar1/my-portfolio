@@ -18,7 +18,7 @@ export const GET = async () => {
   });
   
   // Replace with your actual Substack URL - using Medium as a fallback for testing
-  const substackUrl = 'https://substack.com/@codeclouddevops/posts';
+  const substackUrl = 'https://codeclouddevops.substack.com/feed';
   
   try {
     // Try direct fetch first
