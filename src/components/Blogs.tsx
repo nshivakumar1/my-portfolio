@@ -1,11 +1,5 @@
 import React from 'react';
-
-interface BlogPost {
-  title: string;
-  link: string;
-  pubDate: string;
-  contentSnippet?: string; // contentSnippet is optional based on your description
-}
+import type { BlogPost } from '../types';
 
 interface BlogsProps {
   posts: BlogPost[];
@@ -21,7 +15,9 @@ const Blogs: React.FC<BlogsProps> = ({ posts }) => {
             <a href={post.link} target="_blank" rel="noopener noreferrer">
               {post.title}
             </a>{' '}
-            - {new Date(post.pubDate).toLocaleDateString()}
+            {post.pubDate && (
+              <span>- {new Date(post.pubDate).toLocaleDateString()}</span>
+            )}
           </li>
         ))}
       </ul>

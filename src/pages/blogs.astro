@@ -1,10 +1,10 @@
 ---
 // blogs.astro
-console.log('Executing blogs.astro');
-import Blogs from '../components/Blogs.tsx';
-import { Fragment } from 'react';
+import BlogsComponent from '../components/Blogs.tsx';
 import Layout from '../layouts/Layout.astro';
-import { parseString } from 'xml2js';
+import type { BlogPost } from '../types';
+import { Fragment } from 'react';
+import { parseString } from 'xml2js'; // Consider adding a type definition for xml2js if not already present
 
 interface XmlResult { rss: { channel: { item: any | any[] } } }
 
@@ -16,6 +16,7 @@ interface SubstackPost {
   contentSnippet?: string;
   // Add other properties as needed
 }
+
 
 // Create a function to fetch Substack posts with proper error handling
 async function getSubstackPosts(): Promise<SubstackPost[]> {
@@ -67,21 +68,24 @@ async function getSubstackPosts(): Promise<SubstackPost[]> {
 
   } catch (error: unknown) {
     console.error("Error fetching or parsing feed.");
-
-    // Log both errors for debugging
-      // Log both errors for debugging
+    return []; // Return an empty array in case of an error
 
   }
 }
 
 // Get posts with error handling - DECLARE ONLY ONCE
-const posts = await getSubstackPosts();
+const substackPosts = await getSubstackPosts();
+
+// Map the fetched SubstackPost data to the BlogPost type
+const posts: BlogPost[] = substackPosts.map(post => ({
+  title: post.title,
+  link: post.link,
+  pubDate: post.pubDate,
+}));
 ---
 
 <Layout title="Blog Posts">
-  <Fragment>
-    <Blogs posts={posts} />
-  </Fragment>
+    <BlogsComponent posts={posts} />
 </Layout>
 
 <style>
