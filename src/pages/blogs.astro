@@ -3,7 +3,9 @@
 console.log('Executing blogs.astro');
 
 import Layout from '../layouts/Layout.astro';
-import Parser from 'rss-parser';
+import { parseString } from 'xml2js';
+
+interface XmlResult { rss: { channel: { item: any | any[] } } }
 
 // Define a type for the post items
 interface SubstackPost {
@@ -16,23 +18,6 @@ interface SubstackPost {
 
 // Create a function to fetch Substack posts with proper error handling
 async function getSubstackPosts(): Promise<SubstackPost[]> {
-  // Configure parser with more lenient options
-  const parser = new Parser({
-    customFields: {
-      item: ['content:encoded', 'description']
-    },
-    // Add timeout to prevent hanging
-    timeout: 5000,
-    // More lenient XML parsing
-    xml2js: {
-      // Make XML parsing more tolerant of errors
-      strict: false,
-      normalize: true,
-      normalizeTags: true,
-      // Skip attributes that cause issues
-      ignoreAttrs: true
-    }
-  });
   
   // Replace with your actual Substack URL - using Medium as a fallback for testing
   // You can change this to your actual Substack URL later
@@ -41,12 +26,58 @@ async function getSubstackPosts(): Promise<SubstackPost[]> {
   
   try {
     // Try direct fetch first
-    const feed = await parser.parseURL(substackUrl);
-    console.log('Direct fetch successful. Feed:', feed);
-    return (feed.items as SubstackPost[]) || [];
+    // We won't use parseURL as we are switching to xml2js
+    // The original error suggests parseURL was failing anyway
+    console.log("Skipping direct parseURL, proceeding with fetch and xml2js");
+    // const feed = await parser.parseURL(substackUrl);
+
+      // Fallback to fetch API with manual parsing if direct method fails
+      const response = await fetch(substackUrl);
+      if (!response.ok) {
+        console.error(`Fallback fetch failed: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to fetch: ${response.status}`);
+      }
+      console.log(`Fallback fetch successful. Status: ${response.status} ${response.statusText}`);
+      const xmlText = await response.text();
+      console.log('Parsing XML text with xml2js...');
+
+      return new Promise((resolve, reject) => {
+ parseString(xmlText, { explicitArray: false, ignoreAttrs: true }, (err: Error | null, result: XmlResult | undefined) => {
+          if (err) {
+            console.error('xml2js parsing error:', err);
+            reject(err);
+            return;
+          }
+          console.log('xml2js parsing successful. Result:', result);
+
+          const items = result?.rss?.channel?.item;
+          console.log('Extracted items:', items);
+
+          if (!items) {
+            console.log('No items found in the parsed feed.');
+            resolve([]);
+            return;
+          }
+
+          const posts: SubstackPost[] = Array.isArray(items) ? items.map(item => ({
+            title: item.title?._cdata || item.title,
+            link: item.link,
+            pubDate: item.pubDate,
+            contentSnippet: item['content:encoded']?._cdata || item.description?._cdata || item.description // Extract content:encoded or description
+          })) : [{ title: items.title?._cdata || items.title, link: items.link, pubDate: items.pubDate, contentSnippet: items['content:encoded']?._cdata || items.description?._cdata || items.description }]; // Handle single item case
+          console.log('Parsed posts:', posts);
+          resolve(posts);
+        });
+      });
+    
   } catch (error: unknown) {
     console.error("Direct feed fetch failed, trying workaround...");
     
+    // Log both errors for debugging
+    if (error instanceof Error) {
+      console.error(`Original error: ${error.message}`);
+    }
+
     try {
       // Fallback to fetch API with manual parsing if direct method fails
       const response = await fetch(substackUrl);
@@ -56,29 +87,10 @@ async function getSubstackPosts(): Promise<SubstackPost[]> {
       }
       console.log(`Fallback fetch successful. Status: ${response.status} ${response.statusText}`);
       const xmlText = await response.text();
-      console.log('Parsing XML text...');
-      const feed = await parser.parseString(xmlText);
-      return (feed.items as SubstackPost[]) || [];
-    } catch (fallbackError: unknown) {
+      console.log('Parsing XML text with xml2js...');
+
       // Log both errors for debugging
-      if (error instanceof Error) {
-        console.error(`Original error: ${error.message}`);
-      }
-      
-      if (fallbackError instanceof Error) {
-        console.error(`Fallback error: ${fallbackError.message}`);
-      }
-      
-      // Return mock data so the page doesn't break
-      return [
-        {
-          title: "Coming Soon",
-          link: "#",
-          pubDate: new Date().toISOString(),
-          contentSnippet: "Blog posts will be available soon. Check back later!"
-        }
-      ];
-    }
+
   }
 }
 
