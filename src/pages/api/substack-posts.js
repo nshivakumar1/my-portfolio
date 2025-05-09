@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     });
     
     // Replace with your actual Substack URL
-    const substackURL = 'https://YOUR-SUBSTACK-NAME.substack.com/feed';
+    const substackURL = 'https://substack.com/@codeclouddevops/posts';
     
     const feed = await parser.parseURL(substackURL);
     
