@@ -25,7 +25,7 @@ export const workExperience = [
     company: "Amazon India",
     location: "Bengaluru, India",
     position: "Catalog Associate",
-    period: "Sep 2023 - Apr 2022",
+    period: "Sep 2021 - Apr 2022",
     achievements: [
       "Optimized task management by organizing and prioritizing work to ensure assignments were completed efficiently and on time",
       "Managed a catalog of over 250,000 products, maintaining data accuracy and consistency across the platform.",
