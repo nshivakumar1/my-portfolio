@@ -67,9 +67,6 @@ vercel -build
 # Watch the build magic happen! Good Luck!
 
 Visit `http://localhost:4321` in your browser to see it in action.
-// If you'd like to deploy to Vercel Immediately then hit this button now:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnshivakumar1%2Fnakulfolio)
 
 ## 🧩 Customizing the Portfolio
 
@@ -181,6 +178,10 @@ yarn preview
 ## 📤 Deployment
 
 Easily deploy to platforms like **Vercel**, **Netlify**, **GitHub Pages**, or any static host of your choice.
+
+## If you'd like to deploy to Vercel Immediately then hit this button now:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnshivakumar1%2Fnakulfolio)
 
 ## 📝 License
 
