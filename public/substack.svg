@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Substack">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ff7a1a"/>
+      <stop offset="100%" stop-color="#ff5a00"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="120" height="120" rx="16" ry="16" fill="url(#g)"/>
+  <rect x="20" y="28" width="80" height="10" fill="#ffffff" opacity="0.95"/>
+  <rect x="20" y="48" width="80" height="10" fill="#ffffff" opacity="0.95"/>
+  <path d="M20 68h80v32L60 84 20 100z" fill="#ffffff" opacity="0.95"/>
+</svg>
+

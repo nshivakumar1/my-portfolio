@@ -20,7 +20,7 @@ const Blogs: React.FC<BlogsProps> = ({ posts }) => {
                 {post.imageUrl ? (
                   <img className={styles.thumb} src={post.imageUrl} alt={post.title} loading="lazy" />
                 ) : (
-                  <div className={styles.thumbPlaceholder}>📝</div>
+                  <img className={styles.thumb} src="/substack.svg" alt="Substack" loading="lazy" />
                 )}
               </div>
               <div className={styles.cardBody}>
