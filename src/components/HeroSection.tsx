@@ -48,7 +48,7 @@ export default function HeroSection() {
               className="text-xl text-muted-foreground mb-6"
               variants={childVariants}
             >
-              Associate Technical Engineer, Infrastructure Operations 👨‍💻
+              Subject Matter Expert / Team Lead, Infrastructure Operations 👨‍💻
             </motion.p>
 
             <motion.div
