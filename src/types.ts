@@ -3,4 +3,6 @@ export interface BlogPost {
   link: string;
   pubDate?: string;
   contentSnippet?: string;
+  imageUrl?: string;
+  excerpt?: string;
 }

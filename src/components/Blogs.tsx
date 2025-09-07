@@ -13,18 +13,26 @@ const Blogs: React.FC<BlogsProps> = ({ posts }) => {
       {posts.length === 0 ? (
         <div className={styles.empty}>No posts available right now.</div>
       ) : (
-        <ul className={styles.list}>
+        <div className={styles.grid}>
           {posts.map((post, index) => (
-            <li key={index} className={styles.item}>
-              <a className={styles.link} href={post.link} target="_blank" rel="noopener noreferrer">
-                {post.title}
-              </a>
-              {post.pubDate && (
-                <span className={styles.date}>{new Date(post.pubDate).toLocaleDateString()}</span>
-              )}
-            </li>
+            <a key={index} className={styles.card} href={post.link} target="_blank" rel="noopener noreferrer">
+              <div className={styles.thumbWrapper}>
+                {post.imageUrl ? (
+                  <img className={styles.thumb} src={post.imageUrl} alt={post.title} loading="lazy" />
+                ) : (
+                  <div className={styles.thumbPlaceholder}>📝</div>
+                )}
+              </div>
+              <div className={styles.cardBody}>
+                <h3 className={styles.cardTitle}>{post.title}</h3>
+                {post.excerpt && <p className={styles.cardExcerpt}>{post.excerpt}</p>}
+                {post.pubDate && (
+                  <span className={styles.cardDate}>{new Date(post.pubDate).toLocaleDateString()}</span>
+                )}
+              </div>
+            </a>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

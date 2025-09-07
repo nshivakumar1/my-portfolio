@@ -39,11 +39,27 @@ async function getSubstackPosts(): Promise<RssItem[]> {
 // Get posts with error handling - DECLARE ONLY ONCE
 const substackPosts = await getSubstackPosts();
 
+// Helpers to extract first image URL and a short excerpt
+function extractFirstImage(html?: string): string | undefined {
+  if (!html) return undefined;
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return match?.[1];
+}
+
+function toExcerpt(text?: string, max = 140): string | undefined {
+  if (!text) return undefined;
+  const clean = text.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').trim();
+  return clean.length > max ? clean.slice(0, max - 1) + '…' : clean;
+}
+
 // Map the fetched SubstackPost data to the BlogPost type
 const posts: BlogPost[] = substackPosts.map(post => ({
   title: post.title,
   link: post.link,
   pubDate: post.pubDate,
+  contentSnippet: post.contentSnippet,
+  imageUrl: extractFirstImage(post.contentSnippet),
+  excerpt: toExcerpt(post.contentSnippet)
 }));
 ---
 
