@@ -9,9 +9,22 @@ export const personalInfo = {
 export const workExperience = [
   {
     company: "Kyndryl Solutions Pvt.Ltd",
+    location: "Bengaluru, India",
+    position: "Subject Matter Expert / Team Lead",
+    period: "Sep 2025 - Present",
+    achievements: [
+      "Strealine Team with 10+ resources",
+      " Responsible for the end to end delivery of the project",
+      "Maintain 100% SLA and KPI Metrics and achieve 100% operational efficiency",
+      "Maintain Repository of all the documents and knowledge",
+      "Validate compliance of team resources and productivity clockings",
+    ],
+  },
+  {
+    company: "Kyndryl Solutions Pvt.Ltd",
     location: "Hybrid",
     position: "Associate Technical Engineer",
-    period: "May 2022 - Present",
+    period: "May 2022 - Sep 2025",
     achievements: [
       "Spearheaded the UK-to-India business transition, ensuring seamless knowledge transfer from UK SMEs and onboarding new support team",
       "Led knowledge transfer initiatives, including shadowing and reverseshadowing processes.",
