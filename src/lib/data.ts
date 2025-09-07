@@ -104,6 +104,19 @@ toolsAndServices: [
 
 export const projects = [
   {
+    title: "Twitter App Clone",
+    github: "https://github.com/nshivakumar1/social-app-clone.git",
+    description: [
+      "Real-time Social Media App built with Node.js and Socket.IO",
+      "Infrastructure as Code using Terraform",
+      "Comprehensive CI/CD Pipeline with Jenkins",
+      "GitOps workflow with ArgoCD and Kubernetes",
+      "Containerized application using Docker and AWS ECS Fargate",
+      "Enterprise Notifications using Slack and Jira",
+      "Real-time Monitoring using ELK Stack",
+    ],
+  },
+  {
     title: "Infrastructuere as Code using AWS CloudFormation",
     github: "https://github.com/nshivakumar1/nextwork-web-project",
     description: [
