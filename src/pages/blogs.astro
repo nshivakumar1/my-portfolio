@@ -1,25 +1,15 @@
 ---
 // blogs.astro
-import BlogsComponent from '../components/Blogs.tsx';
+import BlogsComponent from '../components/Blogs';
 import Layout from '../layouts/Layout.astro';
 import type { BlogPost } from '../types';
-import { Fragment } from 'react';
-import { parseString } from 'xml2js'; // Consider adding a type definition for xml2js if not already present
+import Parser from 'rss-parser';
 
-interface XmlResult { rss: { channel: { item: any | any[] } } }
-
-// Define a type for the post items
-interface SubstackPost {
-  title: string;
-  link: string;
-  pubDate?: string;
-  contentSnippet?: string;
-  // Add other properties as needed
-}
+type RssItem = { title: string; link: string; pubDate?: string; contentSnippet?: string };
 
 
 // Create a function to fetch Substack posts with proper error handling
-async function getSubstackPosts(): Promise<SubstackPost[]> {
+async function getSubstackPosts(): Promise<RssItem[]> {
   
   // Replace with your actual Substack URL - using Medium as a fallback for testing
   // You can change this to your actual Substack URL later
@@ -27,44 +17,17 @@ async function getSubstackPosts(): Promise<SubstackPost[]> {
   console.log('Attempting to fetch feed from:', substackUrl);
   
   try {
-    // Initial fetch attempt
-    const response = await fetch(substackUrl);
-    if (!response.ok) {
-      console.error(`Initial fetch failed: ${response.status} ${response.statusText}`);
-      throw new Error(`Failed to fetch: ${response.status}`);
-    }
-    console.log(`Initial fetch successful. Status: ${response.status} ${response.statusText}`);
-    const xmlText = await response.text();
-    console.log('Parsing XML text with xml2js...');
-
-    return new Promise((resolve, reject) => {
-      parseString(xmlText, { explicitArray: false, ignoreAttrs: true }, (err: Error | null, result: XmlResult | undefined) => {
-        if (err) {
-          console.error('xml2js parsing error:', err);
-          reject(err);
-          return;
-        }
-        console.log('xml2js parsing successful. Result:', result);
-
-        const items = result?.rss?.channel?.item;
-        console.log('Extracted items:', items);
-
-        if (!items) {
-          console.log('No items found in the parsed feed.');
-          resolve([]);
-          return;
-        }
-
-        const posts: SubstackPost[] = Array.isArray(items) ? items.map(item => ({
-          title: item.title?._cdata || item.title,
-          link: item.link,
-          pubDate: item.pubDate,
-          contentSnippet: item['content:encoded']?._cdata || item.description?._cdata || item.description // Extract content:encoded or description
-        })) : [{ title: items.title?._cdata || items.title, link: items.link, pubDate: items.pubDate, contentSnippet: items['content:encoded']?._cdata || items.description?._cdata || items.description }]; // Handle single item case
-        console.log('Parsed posts:', posts);
-        resolve(posts);
-      });
-    });
+    const parser = new Parser();
+    const feed = await parser.parseURL(substackUrl);
+    const items = feed.items || [];
+    return items
+      .map((item) => ({
+        title: (item.title ?? '').toString(),
+        link: item.link ?? '',
+        pubDate: (item as any).pubDate,
+        contentSnippet: (item as any).contentSnippet,
+      }))
+      .filter((i) => i.title && i.link);
 
   } catch (error: unknown) {
     console.error("Error fetching or parsing feed.");
