@@ -42,6 +42,16 @@ export default function GlassHeader() {
               </motion.a>
             )
           )}
+          <motion.a
+            href="/blogs"
+            className="transition-colors hover:text-foreground/80 text-foreground/60"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.5 }}
+            whileHover={{ y: -2 }}
+          >
+            📝 Blogs
+          </motion.a>
         </nav>
 
         <div className="flex items-center space-x-2">
@@ -89,6 +99,16 @@ export default function GlassHeader() {
                   </motion.a>
                 )
               )}
+              <motion.a
+                href="/blogs"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 py-2"
+                onClick={toggleMenu}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2, delay: 0.5 }}
+              >
+                📝 Blogs
+              </motion.a>
             </nav>
           </motion.div>
         )}
