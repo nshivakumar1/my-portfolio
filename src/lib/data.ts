@@ -118,7 +118,7 @@ export const projects = [
   },
   {
     title: "AI Knowledge Base (RAG-powered Q&A system)",
-    gitlab: "https://gitlab.com/nakulshivakumar/ai-knowledge-hub.git",
+    github: "https://gitlab.com/nakulshivakumar/ai-knowledge-hub.git",
     description: [
       "Upload multiple text documents (.txt format)",
       "Store documents in Azure Blob Storage",
@@ -136,7 +136,7 @@ export const projects = [
     ],
   },
   {
-    title: "Infrastructuere as Code using AWS CloudFormation",
+    title: "Infrastructure as Code using AWS CloudFormation",
     github: "https://github.com/nshivakumar1/nextwork-web-project",
     description: [
       "Designed and implemented a comprehensive Infrastructure as Code (IaC) solution using AWS CloudFormation, automating the deployment of a multi-tier web application architecture.",
