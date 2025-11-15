@@ -117,6 +117,25 @@ export const projects = [
     ],
   },
   {
+    title: "AI Knowledge Base (RAG-powered Q&A system)",
+    gitlab: "https://gitlab.com/nakulshivakumar/ai-knowledge-hub.git",
+    description: [
+      "Upload multiple text documents (.txt format)",
+      "Store documents in Azure Blob Storage",
+      "Automatic document processing and embedding generation",
+      "Natural language question answering",
+      "Context-aware responses powered by RAG (Retrieval-Augmented Generation)",
+      "OpenAI GPT-3.5-turbo for answer generation",
+      "Text-embedding-3-small for document vectorization",
+      "Configurable response length (max 500 tokens),",
+      "Fallback responses when no relevant documents found",
+      "Runs on Azure free tier",
+      "Cheapest OpenAI models (GPT-3.5-turbo)",
+      "Pay-per-use pricing model",
+      "Total cost: $1-2/month",
+    ],
+  },
+  {
     title: "Infrastructuere as Code using AWS CloudFormation",
     github: "https://github.com/nshivakumar1/nextwork-web-project",
     description: [
