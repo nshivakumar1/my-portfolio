@@ -13,11 +13,12 @@ export const workExperience = [
     position: "Subject Matter Expert / Team Lead",
     period: "Sep 2025 - Present",
     achievements: [
-      "Strealine Team with 10+ resources",
-      " Responsible for the end to end delivery of the project",
+      "Streamline Team with 10+ resources",
+      "Responsible for the end to end delivery of the project",
       "Maintain 100% SLA and KPI Metrics and achieve 100% operational efficiency",
       "Maintain Repository of all the documents and knowledge",
-      "Validate compliance of team resources and productivity clockings",
+      "Validate compliance of team resources and productivity clockings"
+      "Supported critical replatforming of tools from AIX to RHEL and IMMP Migrations of applications from legacy to cloud (Azure),
     ],
   },
   {
